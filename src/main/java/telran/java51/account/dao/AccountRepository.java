@@ -1,0 +1,10 @@
+package telran.java51.account.dao;
+
+import org.springframework.data.repository.CrudRepository;
+
+import telran.java51.account.model.User;
+
+public interface AccountRepository extends CrudRepository<User, String>{
+	
+
+}
