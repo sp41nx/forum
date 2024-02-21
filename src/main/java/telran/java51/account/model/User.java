@@ -23,6 +23,7 @@ public class User {
 	@Getter
 	@Setter
 	String lastName;
+	@Getter
 	@Setter
 	String password;
 	@Getter

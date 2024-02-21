@@ -1,5 +1,8 @@
 package telran.java51.account.controller;
 
+import java.security.Principal;
+import java.util.Base64;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,9 +34,16 @@ public class AccountController {
 		return accountService.register(userCreateDto); 
 	}
 	
+//	@PostMapping("/login")
+//	public UserDto login(@RequestHeader("Authorization") String token) {
+//		token = token.split(" ")[1];
+//		String credentials = new String(Base64.getDecoder().decode(token));
+//		return accountService.getUser(credentials.split(":")[0]);
+//	}
+	
 	@PostMapping("/login")
-	public UserDto login() {
-		return accountService.login();
+	public UserDto login(Principal principal) {
+		return accountService.getUser(principal.getName());
 	}
 	
 	@DeleteMapping("/user/{user}")
@@ -58,8 +69,8 @@ public class AccountController {
 	
 	@PutMapping("/password")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void changePassword() {
-		accountService.changePassword();
+	public void changePassword(Principal principal, @RequestHeader("X-Password") String newPassword) {
+		accountService.changePassword(principal.getName(), newPassword);
 	}
 	
 	@GetMapping("/user/{user}")
