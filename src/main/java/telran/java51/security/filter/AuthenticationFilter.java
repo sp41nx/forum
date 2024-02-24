@@ -6,6 +6,7 @@ import java.util.Base64;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.modelmapper.internal.bytebuddy.implementation.bind.annotation.Super;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpServerErrorException;
@@ -25,6 +26,7 @@ import telran.java51.account.model.User;
 
 @Component
 @RequiredArgsConstructor
+@Order(10)
 public class AuthenticationFilter implements Filter {
 
 	final AccountRepository accountRepository;
@@ -53,9 +55,9 @@ public class AuthenticationFilter implements Filter {
 	}
 
 	private boolean unsecuredEndPoint(String method, String path) {
-		return (HttpMethod.POST.matches(method) && path.matches("/account/register")) ||   
-			   (HttpMethod.GET.matches(method) && path.matches("/forum/posts/\\w*")) ||
-			   (HttpMethod.POST.matches(method) && path.matches("/forum/posts/\\w*"));
+		return (HttpMethod.POST.matches(method) && path.matches("/account/register"))
+				|| (HttpMethod.GET.matches(method) && path.matches("/forum/posts/\\w*"))
+				|| (HttpMethod.POST.matches(method) && path.matches("/forum/posts/\\w*"));
 	}
 
 	private String[] getCredentials(String header) {
@@ -71,11 +73,10 @@ public class AuthenticationFilter implements Filter {
 			super(request);
 			this.login = login;
 		}
-
+        
+		@Override
 		public Principal getUserPrincipal() {
 			return () -> login;
 		}
-
 	}
-
 }
