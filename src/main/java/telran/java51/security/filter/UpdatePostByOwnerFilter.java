@@ -14,18 +14,21 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import telran.java51.account.dao.AccountRepository;
+import telran.java51.account.exceptions.UserNotFoundException;
 import telran.java51.account.model.User;
+import telran.java51.post.dao.PostRepository;
+import telran.java51.post.dto.exceptions.PostNotFoundException;
+import telran.java51.post.model.Post;
 
 @Component
 @RequiredArgsConstructor
-@Order(40)
-public class UpdateByOwnerFilter implements Filter {
-	
-	final AccountRepository accountRepository;
+@Order(50)
+public class UpdatePostByOwnerFilter implements Filter {
+
+	final PostRepository postRepository;
 
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
@@ -35,8 +38,15 @@ public class UpdateByOwnerFilter implements Filter {
 		if(checkEndPoint(request.getMethod(), request.getServletPath())) {
 			Principal principal = request.getUserPrincipal();
 			String[] pathParts = request.getServletPath().split("/");
-			String login = pathParts[pathParts.length - 1];
-			if(!principal.getName().equalsIgnoreCase(login)) {
+			String postId = pathParts[pathParts.length - 1];
+			Post post ;
+			try {
+				post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
+			} catch (PostNotFoundException e) {
+				response.sendError(404, "Post not found");
+				return;
+			}
+			if(!principal.getName().equalsIgnoreCase(post.getAuthor())) {
 				response.sendError(403, "Permission denied");
 				return;
 			}
@@ -45,7 +55,7 @@ public class UpdateByOwnerFilter implements Filter {
 	}
 	
 	private boolean checkEndPoint(String method, String path) {
-		return HttpMethod.PUT.matches(method) && path.matches("/account/user/\\w+");
+		return HttpMethod.PUT.matches(method) && path.matches("/forum/post/\\w+");
 	}
-	
+
 }

@@ -2,7 +2,6 @@ package telran.java51.security.filter;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Base64;
 
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
@@ -14,18 +13,18 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import telran.java51.account.dao.AccountRepository;
-import telran.java51.account.model.User;
+import telran.java51.post.dao.PostRepository;
+import telran.java51.post.dto.exceptions.PostNotFoundException;
+import telran.java51.post.model.Post;
 
 @Component
 @RequiredArgsConstructor
-@Order(40)
-public class UpdateByOwnerFilter implements Filter {
-	
-	final AccountRepository accountRepository;
+@Order(70)
+public class AddPostFilter implements Filter{
+
+	final PostRepository postRepository;
 
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
@@ -35,9 +34,9 @@ public class UpdateByOwnerFilter implements Filter {
 		if(checkEndPoint(request.getMethod(), request.getServletPath())) {
 			Principal principal = request.getUserPrincipal();
 			String[] pathParts = request.getServletPath().split("/");
-			String login = pathParts[pathParts.length - 1];
-			if(!principal.getName().equalsIgnoreCase(login)) {
-				response.sendError(403, "Permission denied");
+			String userId = pathParts[pathParts.length - 1];
+			if(!principal.getName().equalsIgnoreCase(userId)) {
+				response.sendError(403, "Author name and Login do not match.");
 				return;
 			}
 		}
@@ -45,7 +44,7 @@ public class UpdateByOwnerFilter implements Filter {
 	}
 	
 	private boolean checkEndPoint(String method, String path) {
-		return HttpMethod.PUT.matches(method) && path.matches("/account/user/\\w+");
+		return HttpMethod.POST.matches(method) && path.matches("/forum/post/\\w+");
 	}
-	
+
 }

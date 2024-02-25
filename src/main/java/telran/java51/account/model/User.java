@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import telran.java51.en.Roles;
 
 @EqualsAndHashCode(of = "login")
 @Document(collection = "account")
@@ -27,12 +28,12 @@ public class User {
 	@Setter
 	String password;
 	@Getter
-	Set<String> roles;
+	Set<Roles> roles;
 	
 	
 	public User() {
-		this.roles = new HashSet<String>();
-		roles.add("USER");
+		this.roles = new HashSet<Roles>();
+		roles.add(Roles.USER);
 	}
 	
 	public User(String login, String password) {
@@ -45,16 +46,16 @@ public class User {
 		this(login, password);
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.roles = new HashSet<String>();
+		this.roles = new HashSet<Roles>();
 	}
 
 	
 	public boolean addRole(String role) {
-		return roles.add(role);
+		return roles.add(Roles.valueOf(role.toUpperCase()));
 	}
 	
 	public boolean deleteRole(String role) {
-		return roles.remove(role);
+		return roles.remove(Roles.valueOf(role.toUpperCase()));
 	}
 	
 }

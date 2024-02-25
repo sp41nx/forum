@@ -29,8 +29,8 @@ public class PostController {
 	final PostService postService;
 
 	@PostMapping("/post/{author}")
-	public PostDto addNewPost(Principal principal, @RequestBody NewPostDto newPostDto) {
-		return postService.addNewPost(principal.getName(), newPostDto);
+	public PostDto addNewPost(@PathVariable String author, @RequestBody NewPostDto newPostDto) {
+		return postService.addNewPost(author, newPostDto);
 	}
 
 	@GetMapping("/post/{id}")
@@ -49,9 +49,9 @@ public class PostController {
 	}
 
 	@PutMapping("/post/{id}/comment/{author}")
-	public PostDto addComment(@PathVariable String id, @PathVariable String author,
+	public PostDto addComment(@PathVariable String id, Principal principal,
 			@RequestBody NewCommentDto newCommentDto) {
-		return postService.addComment(id, author, newCommentDto);
+		return postService.addComment(id, principal.getName(), newCommentDto);
 	}
 
 	@PutMapping("/post/{id}/like")

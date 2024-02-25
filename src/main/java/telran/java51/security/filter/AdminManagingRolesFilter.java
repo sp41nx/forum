@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import telran.java51.account.dao.AccountRepository;
 import telran.java51.account.model.User;
+import telran.java51.en.Roles;
 
 @Component
 @RequiredArgsConstructor
@@ -30,7 +31,7 @@ public class AdminManagingRolesFilter implements Filter {
 		HttpServletResponse response = (HttpServletResponse) resp;
 		if(checkEndPoint(request.getMethod(), request.getServletPath())) {
 			User user = accountRepository.findById(request.getUserPrincipal().getName()).get();
-			if(!user.getRoles().contains("ADMINISTRATOR")) {
+			if(!user.getRoles().contains(Roles.ADMINISTRATOR)) {
 				response.sendError(403, "Permission denied");
 				return;
 			}
