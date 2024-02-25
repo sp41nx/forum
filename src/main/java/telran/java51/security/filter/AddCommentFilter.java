@@ -38,9 +38,7 @@ public class AddCommentFilter implements Filter {
 			String[] pathParts = request.getServletPath().split("/");
 			String userId = pathParts[pathParts.length - 1];
 			String postId = pathParts[3];
-			System.out.println("User id : " + userId);
-			System.out.println("Post id : " + postId);
-			Post post ;
+			Post post;
 			try {
 				post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
 			} catch (PostNotFoundException e) {

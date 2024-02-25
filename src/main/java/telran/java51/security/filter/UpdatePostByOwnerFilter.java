@@ -39,7 +39,7 @@ public class UpdatePostByOwnerFilter implements Filter {
 			Principal principal = request.getUserPrincipal();
 			String[] pathParts = request.getServletPath().split("/");
 			String postId = pathParts[pathParts.length - 1];
-			Post post ;
+			Post post;
 			try {
 				post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
 			} catch (PostNotFoundException e) {
