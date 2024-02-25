@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import telran.java51.en.Roles;
+import telran.java51.constants.Roles;
 
 @EqualsAndHashCode(of = "login")
 @Document(collection = "account")

@@ -1,4 +1,4 @@
-package telran.java51.en;
+package telran.java51.constants;
 
 public enum Roles {
 

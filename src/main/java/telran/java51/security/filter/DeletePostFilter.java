@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 import telran.java51.account.dao.AccountRepository;
 import telran.java51.account.exceptions.UserNotFoundException;
 import telran.java51.account.model.User;
-import telran.java51.en.Roles;
+import telran.java51.constants.Roles;
 import telran.java51.post.dao.PostRepository;
 import telran.java51.post.dto.exceptions.PostNotFoundException;
 import telran.java51.post.model.Post;
