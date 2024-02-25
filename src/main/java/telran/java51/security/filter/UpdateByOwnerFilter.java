@@ -22,7 +22,7 @@ import telran.java51.account.model.User;
 
 @Component
 @RequiredArgsConstructor
-@Order(30)
+@Order(40)
 public class UpdateByOwnerFilter implements Filter {
 	
 	final AccountRepository accountRepository;

@@ -1,5 +1,6 @@
 package telran.java51.post.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -28,8 +29,8 @@ public class PostController {
 	final PostService postService;
 
 	@PostMapping("/post/{author}")
-	public PostDto addNewPost(@PathVariable String author, @RequestBody NewPostDto newPostDto) {
-		return postService.addNewPost(author, newPostDto);
+	public PostDto addNewPost(Principal principal, @RequestBody NewPostDto newPostDto) {
+		return postService.addNewPost(principal.getName(), newPostDto);
 	}
 
 	@GetMapping("/post/{id}")
