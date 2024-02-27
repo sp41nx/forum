@@ -15,12 +15,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import telran.java51.account.dao.AccountRepository;
-import telran.java51.account.exceptions.UserNotFoundException;
-import telran.java51.account.model.User;
 import telran.java51.constants.Roles;
 import telran.java51.post.dao.PostRepository;
 import telran.java51.post.dto.exceptions.PostNotFoundException;
 import telran.java51.post.model.Post;
+import telran.java51.security.model.User;
 
 @Component
 @RequiredArgsConstructor
@@ -38,8 +37,9 @@ public class DeletePostFilter implements Filter {
         if(checkEndPoint(request.getMethod(), request.getServletPath())) {
         	String[] pathParts = request.getServletPath().split("/");
 			String postId = pathParts[pathParts.length - 1];
-        	Post post ;
-        	User user = accountRepository.findById(request.getUserPrincipal().getName()).orElseThrow(UserNotFoundException::new);
+        	Post post;
+//        	UserAccount user = accountRepository.findById(request.getUserPrincipal().getName()).orElseThrow(UserNotFoundException::new);
+        	User user = (User) request.getUserPrincipal();
 			try {
 				post = postRepository.findById(postId).orElseThrow(PostNotFoundException::new);
 			} catch (PostNotFoundException e) {

@@ -3,13 +3,14 @@ package telran.java51.security.filter;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.Base64;
+import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.mindrot.jbcrypt.BCrypt;
-import org.modelmapper.internal.bytebuddy.implementation.bind.annotation.Super;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpServerErrorException;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -21,8 +22,8 @@ import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import telran.java51.account.dao.AccountRepository;
-import telran.java51.account.exceptions.UserNotFoundException;
-import telran.java51.account.model.User;
+import telran.java51.account.model.UserAccount;
+import telran.java51.security.model.User;
 
 @Component
 @RequiredArgsConstructor
@@ -36,9 +37,8 @@ public class AuthenticationFilter implements Filter {
 			throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) resp;
-
 		if (!unsecuredEndPoint(request.getMethod(), request.getServletPath())) {
-			User user;
+			UserAccount user;
 			try {
 				String[] credentials = getCredentials(request.getHeader("Authorization"));
 				user = accountRepository.findById(credentials[0]).orElseThrow(RuntimeException::new);
@@ -49,7 +49,8 @@ public class AuthenticationFilter implements Filter {
 				response.sendError(401);
 				return;
 			}
-			request = new WrappedRequest(request, user.getLogin());
+			Set<String> roles = user.getRoles().stream().map(r -> r.toString()).collect(Collectors.toSet());
+			request = new WrappedRequest(request, user.getLogin(), roles);
 		}
 		chain.doFilter(request, response);
 	}
@@ -68,15 +69,18 @@ public class AuthenticationFilter implements Filter {
 
 	private class WrappedRequest extends HttpServletRequestWrapper {
 		private String login;
+		private Set<String> roles;
 
-		public WrappedRequest(HttpServletRequest request, String login) {
+		public WrappedRequest(HttpServletRequest request, String login, Set<String> roles) {
 			super(request);
 			this.login = login;
+			this.roles = roles;
 		}
         
 		@Override
 		public Principal getUserPrincipal() {
-			return () -> login;
+		//	return () -> login;
+			return new User(login, roles);
 		}
 	}
 }

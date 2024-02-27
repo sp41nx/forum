@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import telran.java51.account.dao.AccountRepository;
-import telran.java51.account.model.User;
+import telran.java51.account.model.UserAccount;
 
 @Component
 @RequiredArgsConstructor

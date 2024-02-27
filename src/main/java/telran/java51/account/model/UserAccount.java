@@ -13,7 +13,7 @@ import telran.java51.constants.Roles;
 
 @EqualsAndHashCode(of = "login")
 @Document(collection = "account")
-public class User {
+public class UserAccount {
 	
 	@Getter
 	@Id
@@ -31,18 +31,18 @@ public class User {
 	Set<Roles> roles;
 	
 	
-	public User() {
+	public UserAccount() {
 		this.roles = new HashSet<Roles>();
 		roles.add(Roles.USER);
 	}
 	
-	public User(String login, String password) {
+	public UserAccount(String login, String password) {
 		this();
 		this.login = login;
 		this.password = password;
 	}
 	
-	public User(String login, String password, String firstName, String lastName) {
+	public UserAccount(String login, String password, String firstName, String lastName) {
 		this(login, password);
 		this.firstName = firstName;
 		this.lastName = lastName;

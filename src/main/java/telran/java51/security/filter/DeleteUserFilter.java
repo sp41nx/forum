@@ -16,9 +16,8 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import telran.java51.account.dao.AccountRepository;
-import telran.java51.account.model.User;
 import telran.java51.constants.Roles;
+import telran.java51.security.model.User;
 
 
 @Component
@@ -26,7 +25,7 @@ import telran.java51.constants.Roles;
 @Order(30)
 public class DeleteUserFilter implements Filter {
 
-	final AccountRepository accountRepository;
+	// final AccountRepository accountRepository;
 
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
@@ -34,11 +33,12 @@ public class DeleteUserFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) resp;
 		if(checkEndPoint(request.getMethod(), request.getServletPath())) {
-			Principal principal = request.getUserPrincipal();
+//			Principal principal = request.getUserPrincipal();
 			String[] pathParts = request.getServletPath().split("/");
 			String login = pathParts[pathParts.length - 1];
-			User user = accountRepository.findById(principal.getName()).get();
-			if(!(principal.getName().equalsIgnoreCase(login) || user.getRoles().contains(Roles.ADMINISTRATOR))) {
+//			UserAccount user = accountRepository.findById(principal.getName()).get();
+			User user = (User) request.getUserPrincipal();
+			if(!(user.getName().equalsIgnoreCase(login) || user.getRoles().contains(Roles.ADMINISTRATOR))) {
 				response.sendError(403, "Permission denied");
 				return;
 			}
