@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.util.Base64;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,9 +42,14 @@ public class AccountController {
 //		return accountService.getUser(credentials.split(":")[0]);
 //	}
 	
+//	@PostMapping("/login")
+//	public UserDto login(Principal principal) {
+//		return accountService.getUser(principal.getName());
+//	}
+	
 	@PostMapping("/login")
-	public UserDto login(Principal principal) {
-		return accountService.getUser(principal.getName());
+	public UserDto login(Authentication authentication) {
+		return accountService.getUser(authentication.getName());
 	}
 	
 	@DeleteMapping("/user/{user}")
